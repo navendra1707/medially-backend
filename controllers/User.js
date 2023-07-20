@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import { generateNewUserId } from "./UserId.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
     try {
@@ -13,6 +14,11 @@ export const register = async (req, res) => {
             gender,
             dob,
         } = req.body;
+
+        const presentUser = await User.findOne({email: email});
+        if(presentUser){
+            throw new Error("Email ID already exists.");
+        }
 
         const userId = await generateNewUserId();
 
@@ -31,14 +37,40 @@ export const register = async (req, res) => {
         });
 
         const createdUser = await newUser.save();
+        const token = jwt.sign({ id: createdUser._id }, process.env.JWT_SECRET);
+        delete createdUser.password;
 
         res.status(201).json({
             message: "Account created Successfully",
-            user: createdUser
+            user: createdUser,
+            token
         });
     } catch(err){
         res.status(404).json({
             message: err.message
+        });
+    }
+}
+
+export const login = async (req,res) => {
+    try {
+        const {email, password} = req.body;
+        const user = await User.findOne({ email: email });
+        if(!user) return res.status(400).json({message: 'User does not exists.'});
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(!isMatch) return res.status(400).json({ message: "Invalid credentials." });
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET); // sign the token with user id and use a key JWT_SECRET
+        delete user.password // so that it is not sent back to frontend in res
+        res.status(200).json({ 
+            message: "logged in successfully",
+            token, 
+            user 
+        });
+    } catch(err) {
+        res.status(500).json({
+            error: err.message
         });
     }
 }
