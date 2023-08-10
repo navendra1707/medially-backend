@@ -22,6 +22,11 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.sendStatus(200);
 });
+app.get('/start-server', (req, res) => {
+    res.status(200).json({
+        message: 'server started'
+    })
+})
 app.use(userRoutes);
 app.use(doctorRoutes);
 
