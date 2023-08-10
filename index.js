@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 
 import userRoutes from "./routes/User.js";
+import doctorRoutes from './routes/Doctor.js';
 
 const app = express();
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 app.use(userRoutes);
+app.use(doctorRoutes);
 
 mongoose.connect(process.env.MONGO_URL)
 .then(() => {
