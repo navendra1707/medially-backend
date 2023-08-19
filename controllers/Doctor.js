@@ -3,6 +3,7 @@ import Doctor from "../models/Doctor.js";
 export const findBySymptoms = async (req, res) => {
   try {
     const { specializations } = req.body;
+    console.log(specializations);
     const page = +req.query.page || 1;
 
     const doctors = await Doctor.find({
@@ -28,3 +29,22 @@ export const findBySymptoms = async (req, res) => {
     });
   }
 };
+
+export const getIndividualDoctor = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const doctor = await Doctor.findById(id);
+
+    if(!doctor){
+      throw new Error("Doctor not found.");
+    }
+
+    res.status(200).json({
+      doctor
+    });
+  } catch(err) {
+    res.status(404).json({
+      message: err.message
+    });
+  }
+}

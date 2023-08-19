@@ -28,7 +28,7 @@ app.get('/start-server', (req, res) => {
     })
 })
 app.use(userRoutes);
-app.use(doctorRoutes);
+app.use('/doctor', doctorRoutes);
 
 mongoose
   .connect(process.env.MONGO_URL)
