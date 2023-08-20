@@ -5,15 +5,16 @@ export const findBySymptoms = async (req, res) => {
     const { specializations } = req.body;
     console.log(specializations);
     const page = +req.query.page || 1;
+    const regexPatterns = specializations.map(value => new RegExp(value, 'i'));
 
     const doctors = await Doctor.find({
-      correctSpecialization: { $in: specializations },
+      correctSpecialization: { $in: regexPatterns },
     })
       .skip(10 * (page - 1))
       .limit(10);
 
     const totalDoctors = await Doctor.find({
-        correctSpecialization: { $in: specializations },
+        correctSpecialization: { $in: regexPatterns },
       }).countDocuments();
 
     res.status(200).json({
