@@ -8,6 +8,7 @@ import cors from "cors";
 
 import userRoutes from "./routes/User.js";
 import doctorRoutes from "./routes/Doctor.js";
+import appointmentRoutes from './routes/Appointment.js';
 
 const app = express();
 dotenv.config();
@@ -29,6 +30,7 @@ app.get('/start-server', (req, res) => {
 })
 app.use(userRoutes);
 app.use('/doctor', doctorRoutes);
+app.use('/appointment', appointmentRoutes);
 
 mongoose
   .connect(process.env.MONGO_URL)
