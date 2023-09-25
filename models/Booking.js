@@ -18,6 +18,14 @@ export const BookingSchema = new mongoose.Schema(
         type: String,
         required: true
     },
+    doctorName: {
+      type: String,
+      required: true
+    },
+    date: {
+      type: String,
+      required: true
+    },
     time: {
       type: String,
     },
@@ -27,7 +35,7 @@ export const BookingSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      default: "pending",
+      default: "booked",
     },
   },
   {

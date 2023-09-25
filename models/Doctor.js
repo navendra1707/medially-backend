@@ -50,6 +50,12 @@ const DoctorSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
     },
+    userId: {
+        type: String
+    },
+    password: {
+        type: String
+    },
     clinicTiming: String,
     fees: String
 });

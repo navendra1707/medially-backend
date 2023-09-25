@@ -1,3 +1,4 @@
+import Doctor from "../models/Doctor.js";
 import User from "../models/User.js";
 import { generateNewUserId } from "./UserId.js";
 import bcrypt from "bcrypt";
@@ -56,6 +57,29 @@ export const login = async (req,res) => {
     try {
         const {email, password} = req.body;
         const user = await User.findOne({ email: email });
+        if(!user) return res.status(400).json({message: 'User does not exists.'});
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(!isMatch) return res.status(400).json({ message: "Invalid credentials." });
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET); // sign the token with user id and use a key JWT_SECRET
+        delete user.password // so that it is not sent back to frontend in res
+        res.status(200).json({ 
+            message: "logged in successfully",
+            token, 
+            user 
+        });
+    } catch(err) {
+        res.status(500).json({
+            error: err.message
+        });
+    }
+}
+
+export const doctorLogin = async (req, res) => {
+    try {
+        const {userId, password} = req.body;
+        const user = await Doctor.findOne({ userId: userId });
         if(!user) return res.status(400).json({message: 'User does not exists.'});
 
         const isMatch = await bcrypt.compare(password, user.password);

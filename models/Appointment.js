@@ -15,10 +15,15 @@ const AppointmentSchema = new mongoose.Schema({
         default: []
     },
     currentNumber: {
-        type: Number
+        type: Number,
+        default: 1
     },
     currentPatientId: {
         type: String
+    },
+    tokenNumber: {
+        type: Number,
+        default: 1
     }
 }, {
     timestamps: true

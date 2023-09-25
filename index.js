@@ -5,10 +5,13 @@ import helmet from "helmet";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 import cors from "cors";
+import bcrypt from 'bcrypt';
 
 import userRoutes from "./routes/User.js";
 import doctorRoutes from "./routes/Doctor.js";
-import appointmentRoutes from './routes/Appointment.js';
+import appointmentRoutes from "./routes/Appointment.js";
+import Doctor from "./models/Doctor.js";
+import { generateNewUserId } from "./controllers/UserId.js";
 
 const app = express();
 dotenv.config();
@@ -23,14 +26,14 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.sendStatus(200);
 });
-app.get('/start-server', (req, res) => {
-    res.status(200).json({
-        message: 'server started'
-    })
-})
+app.get("/start-server", (req, res) => {
+  res.status(200).json({
+    message: "server started",
+  });
+});
 app.use(userRoutes);
-app.use('/doctor', doctorRoutes);
-app.use('/appointment', appointmentRoutes);
+app.use("/doctor", doctorRoutes);
+app.use("/appointment", appointmentRoutes);
 
 mongoose
   .connect(process.env.MONGO_URL)

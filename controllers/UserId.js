@@ -22,11 +22,11 @@ export const generateNewUserId = async () => {
     right += newRight;
     const newUserId = left + right;
 
-    await UserId.findOneAndUpdate({
+    const newId = await UserId.findOneAndUpdate({
         userId: newUserId,
         new: true
     });
 
-    return newUserId;
+    return newId.userId;
   }
 };
